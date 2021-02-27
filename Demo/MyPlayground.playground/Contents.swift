@@ -2,6 +2,7 @@
 
 import PlaygroundSupport
 import UIKit
+import KSPlayer
 
 // import KSPlayer
 //

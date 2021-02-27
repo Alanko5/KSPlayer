@@ -19,6 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         KSPlayerManager.logLevel = .debug
         KSPlayerManager.firstPlayerType = KSMEPlayer.self
         KSPlayerManager.secondPlayerType = KSMEPlayer.self
+        #if os(tvOS)
+        KSPlayerManager.enableVolumeGestures = false
+        KSPlayerManager.enablePlaytimeGestures = false
+        KSPlayerManager.enablePortraitGestures = false
+        KSPlayerManager.enableBrightnessGestures = false
+        #endif
 //        KSPlayerManager.supportedInterfaceOrientations = .all
         KSOptions.preferredForwardBufferDuration = 10
         KSOptions.isAutoPlay = true
@@ -29,16 +35,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         KSOptions.hardwareDecodeH264 = true
         if UIDevice.current.userInterfaceIdiom == .phone {
             window.rootViewController = UINavigationController(rootViewController: MasterViewController())
+        } else if UIDevice.current.userInterfaceIdiom == .tv {
+            window.rootViewController = UINavigationController(rootViewController: MasterViewController())
         } else {
             let splitViewController = UISplitViewController()
             splitViewController.preferredDisplayMode = .primaryOverlay
             splitViewController.delegate = self
+            #if os(tvOS)
+            let detailVC = KStvOSViewController()
+            #else
             let detailVC = DetailViewController()
-            splitViewController.viewControllers = [UINavigationController(rootViewController: MasterViewController()), UINavigationController(rootViewController: detailVC)]
-            #if os(iOS)
-            detailVC.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
             detailVC.navigationItem.leftItemsSupplementBackButton = true
             #endif
+            splitViewController.viewControllers = [UINavigationController(rootViewController: MasterViewController()), UINavigationController(rootViewController: detailVC)]
+            detailVC.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
             window.rootViewController = splitViewController
         }
         window.makeKeyAndVisible()
