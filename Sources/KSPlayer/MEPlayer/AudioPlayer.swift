@@ -86,6 +86,37 @@ final class AudioGraphPlayer: AudioPlayer {
             AudioUnitSetParameter(audioUnitForMixer, kMultiChannelMixerParam_Enable, kAudioUnitScope_Input, 0, AudioUnitParameterValue(value), 0)
         }
     }
+    
+    public var isReduceLoudSounds: Bool {
+        get {
+            var value = AudioUnitParameterValue(0.001)
+            AudioUnitGetParameter(audioUnitForMixer, kDynamicsProcessorParam_AttackTime, kAudioUnitScope_Global, 0, &value)
+            return value == 0.0249
+        }
+        set {
+            if newValue {
+                self.enableReduceLoudSounds()
+            } else {
+                self.disableReduceLoudSounds()
+            }
+        }
+    }
+    
+    private func disableReduceLoudSounds() {
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_AttackTime, kAudioUnitScope_Global, 0, 0.001, 0)
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_ReleaseTime, kAudioUnitScope_Global, 0, 0.05, 0)
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_Threshold, kAudioUnitScope_Global, 0, -20, 0)
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_ExpansionRatio, kAudioUnitScope_Global, 0, 2, 0)
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_MasterGain, kAudioUnitScope_Global, 0, 0, 0)
+    }
+    
+    private func enableReduceLoudSounds() {
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_AttackTime, kAudioUnitScope_Global, 0, 0.0249, 0)
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_ReleaseTime, kAudioUnitScope_Global, 0, 0.2629, 0)
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_Threshold, kAudioUnitScope_Global, 0, -23.8, 0)
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_ExpansionRatio, kAudioUnitScope_Global, 0, 20, 0)
+        AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_MasterGain, kAudioUnitScope_Global, 0, 7.5, 0)
+    }
 
     public var attackTime: Float {
         get {
@@ -272,6 +303,37 @@ final class AudioEnginePlayer {
                 engine.pause()
             }
         }
+    }
+    
+    public var isReduceLoudSounds: Bool {
+        get {
+            var value = AudioUnitParameterValue(0.001)
+            AudioUnitGetParameter(picth.audioUnit, kDynamicsProcessorParam_AttackTime, kAudioUnitScope_Global, 0, &value)
+            return value == 0.0249
+        }
+        set {
+            if newValue {
+                self.enableReduceLoudSounds()
+            } else {
+                self.disableReduceLoudSounds()
+            }
+        }
+    }
+    
+    private func disableReduceLoudSounds() {
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_AttackTime, kAudioUnitScope_Global, 0, 0.001, 0)
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_ReleaseTime, kAudioUnitScope_Global, 0, 0.05, 0)
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_Threshold, kAudioUnitScope_Global, 0, -20, 0)
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_ExpansionRatio, kAudioUnitScope_Global, 0, 2, 0)
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_MasterGain, kAudioUnitScope_Global, 0, 0, 0)
+    }
+    
+    private func enableReduceLoudSounds() {
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_AttackTime, kAudioUnitScope_Global, 0, 0.0249, 0)
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_ReleaseTime, kAudioUnitScope_Global, 0, 0.2629, 0)
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_Threshold, kAudioUnitScope_Global, 0, -23.8, 0)
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_ExpansionRatio, kAudioUnitScope_Global, 0, 20, 0)
+        AudioUnitSetParameter(picth.audioUnit, kDynamicsProcessorParam_MasterGain, kAudioUnitScope_Global, 0, 7.5, 0)
     }
 
     private let engine = AVAudioEngine()

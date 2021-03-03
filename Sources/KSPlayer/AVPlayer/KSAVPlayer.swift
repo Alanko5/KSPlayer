@@ -487,6 +487,7 @@ struct AVMediaPlayerTrack: MediaPlayerTrack {
     let naturalSize: CGSize
     let name: String
     let language: String?
+    let channels: Int?
     let mediaType: AVMediaType
     let bitDepth: Int32
     let colorPrimaries: String?
@@ -507,6 +508,7 @@ struct AVMediaPlayerTrack: MediaPlayerTrack {
         name = track.assetTrack?.languageCode ?? ""
         language = track.assetTrack?.extendedLanguageTag
         nominalFrameRate = track.assetTrack?.nominalFrameRate ?? 24.0
+        channels = track.assetTrack?.numberOfChannels
         naturalSize = track.assetTrack?.naturalSize ?? .zero
         if let formatDescription = track.assetTrack?.formatDescriptions.first {
             // swiftlint:disable force_cast
@@ -525,5 +527,18 @@ struct AVMediaPlayerTrack: MediaPlayerTrack {
             yCbCrMatrix = nil
             codecType = 0
         }
+    }
+}
+
+extension AVAssetTrack {
+    
+    var numberOfChannels: Int? {
+        for item in (formatDescriptions as? [CMAudioFormatDescription]) ?? [] {
+            if let basic = CMAudioFormatDescriptionGetStreamBasicDescription(item) {
+                let numberOfChannels = Int(basic.pointee.mChannelsPerFrame)
+                return numberOfChannels
+            }
+        }
+        return nil
     }
 }

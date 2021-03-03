@@ -43,6 +43,10 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
         ])
         tableView.delegate = self
         tableView.dataSource = self
+
+        if let test = URL(string: "https://vip.5.dl.webshare.cz/7028/6cqhh1Cs20/524288000/eJw1j0tLxEAQhP_K0AdRGCfTk8wjgUVE3ctC9rA+Lrnk0SELMYmTzYoR_7uzgreupr7uqm8oIQPrROqERaHiFDicIEODWluFTnE4B8lhgUw7tC6M899iguzkF+IwhAuPx3mgL3bLtn5caWBbOpNn10qivmEonZzYYSee8uC4n6aenl_F+5SEX02AURuLaGUbN5XTpKnVaS2lqWSdNK0qKdamrRK82EO2Yel7Dj6An1TNXelJ1GsRtceeisjUH12HD7OSRXRH3o9+85Lv8v1bfjVuLt38f+x5hcymOrY2cebnF4_LSLA/dedc25a563998681d2c947051cb28c95b6f69c00/Disney---Frozen-Fever-2015-1080p-SK.EN---AppleTV.mp4") {
+            objects.append(KSPlayerResource(url: test, options: KSOptions(), name: "Dolby Vison"))
+        }
         if let path = Bundle.main.path(forResource: "567082ac3ae39699f68de4fd2b7444b1e045515a", ofType: "mp4") {
             objects.append(KSPlayerResource(url: URL(fileURLWithPath: path), name: "Local video"))
         }
@@ -70,6 +74,7 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
         if let url = URL(string: "http://aldirect.hls.huya.com/huyalive/30765679-2504742278-10757786168918540288-3049003128-10057-A-0-1_1200.m3u8") {
             objects.append(KSPlayerResource(url: url, options: KSOptions(), name: "Live streaming "))
+        }
         if let url = URL(string: "https://bitmovin-a.akamaihd.net/content/dataset/multi-codec/hevc/stream_fmp4.m3u8") {
             objects.append(KSPlayerResource(url: url, options: KSOptions(), name: "fmp4"))
         }

@@ -68,6 +68,7 @@ public protocol MediaPlayerDelegate: AnyObject {
 public protocol MediaPlayerTrack {
     var name: String { get }
     var language: String? { get }
+    var channels: Int? { get }
     var mediaType: AVFoundation.AVMediaType { get }
     var codecType: FourCharCode { get }
     var nominalFrameRate: Float { get }

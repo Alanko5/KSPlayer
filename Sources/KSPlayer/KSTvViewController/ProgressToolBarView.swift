@@ -121,8 +121,7 @@ final class ProgressToolBarView: UIViewController {
             
             let progressWidth = self.view.frame.size.width - (self.proressOffset*2)
             let centerPosition = Double(progressWidth) * progress
-            
-            print("Position: \(centerPosition)")
+
             if progress != 0 {
                 self.leftConstraint?.constant = CGFloat(centerPosition)
                 self.leftSeekConstraint?.constant = CGFloat(centerPosition)

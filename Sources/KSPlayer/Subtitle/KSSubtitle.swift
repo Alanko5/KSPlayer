@@ -254,3 +254,9 @@ extension Collection where Element: NumericComparable {
         return nil
     }
 }
+
+extension Collection {
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}

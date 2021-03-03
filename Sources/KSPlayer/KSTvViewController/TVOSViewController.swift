@@ -40,22 +40,18 @@ final public class KStvOSViewController: UIViewController {
     
     private var isPlaying:Bool {
         get {
-            if let playing = self.playerView.playerLayer.player?.isPlaying {
-                return playing
-            }
-            return false
+            return self.playerView.playerLayer.player?.isPlaying ?? false
         }
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.configureView()
-        self.configureActions()
-        view.backgroundColor = .black
+        self.addGestures()
+        self.view.backgroundColor = .black
         self.navigationController?.navigationBar.isHidden = true
         
-        self.infoController.pokus()
-        self.infoController.preferredContentSize = CGSize(width: 500, height: 500)
+        self.infoController.start(with: self.playerView.playerLayer.player)
         self.present(newContrller: self.infoController, animation: true)
     }
     
@@ -202,7 +198,7 @@ extension KStvOSViewController: PlayerControllerDelegate {
 //MARK: - button actions
 @available(tvOS 13.0, *)
 extension KStvOSViewController  {
-    private func configureActions() {
+    private func addGestures() {
         let menuPressRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.menuPressed))
         menuPressRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.menu.rawValue)]
         self.view.addGestureRecognizer(menuPressRecognizer)
@@ -215,6 +211,12 @@ extension KStvOSViewController  {
         selectPressRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.select.rawValue)]
         self.view.isUserInteractionEnabled = true
         self.view.addGestureRecognizer(selectPressRecognizer)
+    }
+    
+    private func removeGestures() {
+        for gesture in self.view.gestureRecognizers ?? [] {
+            self.view.removeGestureRecognizer(gesture)
+        }
     }
     
     @objc func menuPressed() {
@@ -269,6 +271,7 @@ extension KStvOSViewController {
         self.view.addSubview(newContrller.view)
         self.addChild(newContrller)
         newContrller.didMove(toParent: self)
+        self.removeGestures()
     }
     
     private func dismiss(oldController:UIViewController, animation:Bool) {
@@ -276,6 +279,7 @@ extension KStvOSViewController {
         oldController.view.removeFromSuperview()
         oldController.removeFromParent()
         oldController.didMove(toParent: nil)
+        self.addGestures()
     }
 }
 

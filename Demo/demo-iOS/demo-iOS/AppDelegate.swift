@@ -17,8 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let window = UIWindow()
         KSPlayerManager.canBackgroundPlay = true
         KSPlayerManager.logLevel = .debug
-        KSPlayerManager.firstPlayerType = KSMEPlayer.self
-        KSPlayerManager.secondPlayerType = KSMEPlayer.self
+        KSPlayerManager.firstPlayerType = KSAVPlayer.self
+        KSPlayerManager.secondPlayerType = KSAVPlayer.self
         #if os(tvOS)
         KSPlayerManager.enableVolumeGestures = false
         KSPlayerManager.enablePlaytimeGestures = false

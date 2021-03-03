@@ -44,60 +44,63 @@ struct AssetTrack: TrackProtocol {
     let transferFunction: String?
     let yCbCrMatrix: String?
     let codecType: FourCharCode
+    let channels: Int?
+    
     init?(stream: UnsafeMutablePointer<AVStream>) {
-        self.stream = stream
-        if let bitrateEntry = av_dict_get(stream.pointee.metadata, "variant_bitrate", nil, 0) ?? av_dict_get(stream.pointee.metadata, "BPS", nil, 0),
-            let bitRate = Int64(String(cString: bitrateEntry.pointee.value)) {
-            self.bitRate = bitRate
-        } else {
-            bitRate = stream.pointee.codecpar.pointee.bit_rate
-        }
-        let format = AVPixelFormat(rawValue: stream.pointee.codecpar.pointee.format)
-        bitDepth = format.bitDepth()
-        colorPrimaries = stream.pointee.codecpar.pointee.color_primaries.colorPrimaries as String?
-        transferFunction = stream.pointee.codecpar.pointee.color_trc.transferFunction as String?
-        yCbCrMatrix = stream.pointee.codecpar.pointee.color_space.ycbcrMatrix as String?
-        codecType = stream.pointee.codecpar.pointee.codec_tag
-        if stream.pointee.codecpar.pointee.codec_type == AVMEDIA_TYPE_AUDIO {
-            mediaType = .audio
-        } else if stream.pointee.codecpar.pointee.codec_type == AVMEDIA_TYPE_VIDEO {
-            mediaType = .video
-        } else if stream.pointee.codecpar.pointee.codec_type == AVMEDIA_TYPE_SUBTITLE {
-            mediaType = .subtitle
-        } else {
-            return nil
-        }
-        var timebase = Timebase(stream.pointee.time_base)
-        if timebase.num <= 0 || timebase.den <= 0 {
-            timebase = Timebase(num: 1, den: mediaType == .audio ? KSPlayerManager.audioPlayerSampleRate : 25000)
-        }
-        self.timebase = timebase
-        rotation = stream.rotation
-        let sar = stream.pointee.codecpar.pointee.sample_aspect_ratio.size
-        naturalSize = CGSize(width: Int(stream.pointee.codecpar.pointee.width), height: Int(CGFloat(stream.pointee.codecpar.pointee.height)*sar.height/sar.width))
-        let frameRate = av_guess_frame_rate(nil, stream, nil)
-        if stream.pointee.duration > 0, stream.pointee.nb_frames > 0, stream.pointee.nb_frames != stream.pointee.duration {
-            nominalFrameRate = Float(stream.pointee.nb_frames) * Float(timebase.den) / Float(stream.pointee.duration) * Float(timebase.num)
-        } else if frameRate.den > 0, frameRate.num > 0 {
-            nominalFrameRate = Float(frameRate.num) / Float(frameRate.den)
-        } else {
-            nominalFrameRate = mediaType == .audio ? 44 : 24
-        }
-        if let entry = av_dict_get(stream.pointee.metadata, "language", nil, 0), let title = entry.pointee.value {
-            language = NSLocalizedString(String(cString: title), comment: "")
-        } else {
-            language = nil
-        }
-        if let entry = av_dict_get(stream.pointee.metadata, "title", nil, 0), let title = entry.pointee.value {
-            name = String(cString: title)
-        } else {
-            if let language = language {
-                name = language
+            self.stream = stream
+            if let bitrateEntry = av_dict_get(stream.pointee.metadata, "variant_bitrate", nil, 0) ?? av_dict_get(stream.pointee.metadata, "BPS", nil, 0),
+                let bitRate = Int64(String(cString: bitrateEntry.pointee.value)) {
+                self.bitRate = bitRate
             } else {
-                name = mediaType == .subtitle ? NSLocalizedString("built-in subtitles", comment: "") : mediaType.rawValue
+                bitRate = stream.pointee.codecpar.pointee.bit_rate
+            }
+            let format = AVPixelFormat(rawValue: stream.pointee.codecpar.pointee.format)
+            bitDepth = format.bitDepth()
+            colorPrimaries = stream.pointee.codecpar.pointee.color_primaries.colorPrimaries as String?
+            transferFunction = stream.pointee.codecpar.pointee.color_trc.transferFunction as String?
+            yCbCrMatrix = stream.pointee.codecpar.pointee.color_space.ycbcrMatrix as String?
+            codecType = stream.pointee.codecpar.pointee.codec_tag
+        channels = Int(stream.pointee.codecpar.pointee.channels)
+            if stream.pointee.codecpar.pointee.codec_type == AVMEDIA_TYPE_AUDIO {
+                mediaType = .audio
+            } else if stream.pointee.codecpar.pointee.codec_type == AVMEDIA_TYPE_VIDEO {
+                mediaType = .video
+            } else if stream.pointee.codecpar.pointee.codec_type == AVMEDIA_TYPE_SUBTITLE {
+                mediaType = .subtitle
+            } else {
+                return nil
+            }
+            var timebase = Timebase(stream.pointee.time_base)
+            if timebase.num <= 0 || timebase.den <= 0 {
+                timebase = Timebase(num: 1, den: mediaType == .audio ? KSPlayerManager.audioPlayerSampleRate : 25000)
+            }
+            self.timebase = timebase
+            rotation = stream.rotation
+            let sar = stream.pointee.codecpar.pointee.sample_aspect_ratio.size
+            naturalSize = CGSize(width: Int(stream.pointee.codecpar.pointee.width), height: Int(CGFloat(stream.pointee.codecpar.pointee.height)*sar.height/sar.width))
+            let frameRate = av_guess_frame_rate(nil, stream, nil)
+            if stream.pointee.duration > 0, stream.pointee.nb_frames > 0, stream.pointee.nb_frames != stream.pointee.duration {
+                nominalFrameRate = Float(stream.pointee.nb_frames) * Float(timebase.den) / Float(stream.pointee.duration) * Float(timebase.num)
+            } else if frameRate.den > 0, frameRate.num > 0 {
+                nominalFrameRate = Float(frameRate.num) / Float(frameRate.den)
+            } else {
+                nominalFrameRate = mediaType == .audio ? 44 : 24
+            }
+            if let entry = av_dict_get(stream.pointee.metadata, "language", nil, 0), let title = entry.pointee.value {
+                language = NSLocalizedString(String(cString: title), comment: "")
+            } else {
+                language = nil
+            }
+            if let entry = av_dict_get(stream.pointee.metadata, "title", nil, 0), let title = entry.pointee.value {
+                name = String(cString: title)
+            } else {
+                if let language = language {
+                    name = language
+                } else {
+                    name = mediaType == .subtitle ? NSLocalizedString("built-in subtitles", comment: "") : mediaType.rawValue
+                }
             }
         }
-    }
 }
 
 protocol PlayerItemTrackProtocol: CapacityProtocol, AnyObject {
