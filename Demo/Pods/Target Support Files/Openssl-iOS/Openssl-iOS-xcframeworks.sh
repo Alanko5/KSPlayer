@@ -151,4 +151,6 @@ install_xcframework() {
 
 install_xcframework "${PODS_ROOT}/../../Sources/Libssl.xcframework" "Libssl" "framework" "ios-x86_64-maccatalyst" "ios-arm64" "ios-arm64_x86_64-simulator"
 install_xcframework "${PODS_ROOT}/../../Sources/Libcrypto.xcframework" "Libcrypto" "framework" "ios-arm64" "ios-arm64_x86_64-simulator" "ios-x86_64-maccatalyst"
+install_xcframework "${PODS_ROOT}/../../Sources/Libssl.xcframework" "Libssl" "framework" "ios-x86_64-maccatalyst" "ios-arm64_x86_64-simulator" "ios-arm64"
+install_xcframework "${PODS_ROOT}/../../Sources/Libcrypto.xcframework" "Libcrypto" "framework" "ios-arm64" "ios-x86_64-maccatalyst" "ios-arm64_x86_64-simulator"
 

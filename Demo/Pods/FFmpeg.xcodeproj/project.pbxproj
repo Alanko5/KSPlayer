@@ -25,26 +25,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2A94B7833BBFD4B51FA062D7D37FD5BB /* PBXContainerItemProxy */ = {
+		6B116F53ACB29B26EAB1C55E1CA3168A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5354E19B870FAC98C6B886C8A7B31731 /* OpenSSL.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 6D5AF030E2CBDC8E539466AA3E9F5832;
-			remoteInfo = "OpenSSL-tvOS";
+			remoteGlobalIDString = 991EE7C8B5B9FB326DB1290119072DB8;
+			remoteInfo = "OpenSSL-macOS";
 		};
-		3FBD3464C422DD9ADE1BB3B1FC1852D8 /* PBXContainerItemProxy */ = {
+		9BF589FB785F6E9E2E8B98A56DEB7361 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5354E19B870FAC98C6B886C8A7B31731 /* OpenSSL.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 7B6EF2D08D36375BC7EDC372D2ED03FA;
 			remoteInfo = "OpenSSL-iOS";
 		};
-		62D3BEC3E4EBC5A426C59D94430067C2 /* PBXContainerItemProxy */ = {
+		F486B12C2EADB7642872ADF5EBE3833A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5354E19B870FAC98C6B886C8A7B31731 /* OpenSSL.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 991EE7C8B5B9FB326DB1290119072DB8;
-			remoteInfo = "OpenSSL-macOS";
+			remoteGlobalIDString = 6D5AF030E2CBDC8E539466AA3E9F5832;
+			remoteInfo = "OpenSSL-tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -308,7 +308,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				FF4F5C0AAD98DCCFF4BFFB5962C398BB /* PBXTargetDependency */,
+				9B48B8C9037A2DAA5A733C2E61771E13 /* PBXTargetDependency */,
 			);
 			name = "FFmpeg-tvOS";
 			productName = "FFmpeg-tvOS";
@@ -328,7 +328,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				6EDD4FB4D7160D8C6E8A28EC599D4896 /* PBXTargetDependency */,
+				85D1484E1442950DE4C6498091B3869D /* PBXTargetDependency */,
 			);
 			name = "FFmpeg-macOS";
 			productName = "FFmpeg-macOS";
@@ -348,7 +348,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				5E8AFC9A96C6417F36E2A6F361933F65 /* PBXTargetDependency */,
+				7647C007EC60F5FCFB5149E968B1E47A /* PBXTargetDependency */,
 			);
 			name = "FFmpeg-iOS";
 			productName = "FFmpeg-iOS";
@@ -498,20 +498,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		5E8AFC9A96C6417F36E2A6F361933F65 /* PBXTargetDependency */ = {
+		7647C007EC60F5FCFB5149E968B1E47A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "OpenSSL-iOS";
-			targetProxy = 3FBD3464C422DD9ADE1BB3B1FC1852D8 /* PBXContainerItemProxy */;
+			targetProxy = 9BF589FB785F6E9E2E8B98A56DEB7361 /* PBXContainerItemProxy */;
 		};
-		6EDD4FB4D7160D8C6E8A28EC599D4896 /* PBXTargetDependency */ = {
+		85D1484E1442950DE4C6498091B3869D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "OpenSSL-macOS";
-			targetProxy = 62D3BEC3E4EBC5A426C59D94430067C2 /* PBXContainerItemProxy */;
+			targetProxy = 6B116F53ACB29B26EAB1C55E1CA3168A /* PBXContainerItemProxy */;
 		};
-		FF4F5C0AAD98DCCFF4BFFB5962C398BB /* PBXTargetDependency */ = {
+		9B48B8C9037A2DAA5A733C2E61771E13 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "OpenSSL-tvOS";
-			targetProxy = 2A94B7833BBFD4B51FA062D7D37FD5BB /* PBXContainerItemProxy */;
+			targetProxy = F486B12C2EADB7642872ADF5EBE3833A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
