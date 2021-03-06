@@ -22,13 +22,22 @@ final class TVPlayerView: VideoPlayerView {
         self.bottomMaskView.isHidden = true
     }
     
-    var subtitlesDelay: Double = 0.0
-    override func showSubtile(from subtitle: KSSubtitleProtocol, at time: TimeInterval) {
-        super.showSubtile(from: subtitle, at: time + self.subtitlesDelay)
-    }
+//    var subtitlesDelay: Double = 0.0
+//    override func showSubtile(from subtitle: KSSubtitleProtocol, at time: TimeInterval) {
+//        super.showSubtile(from: subtitle, at: time + self.subtitlesDelay)
+//    }
     
     public func setSubtitlesBackgorund(color:UIColor) {
         subtitleBackView.backgroundColor = color.withAlphaComponent(0.4)
+    }
+    
+    public var subtitlesDelay: Double {
+        get {
+            return self.resource?.definitions[self.currentDefinition].options.subtitleDelay ?? 0
+        }
+        set {
+            self.resource?.definitions[self.currentDefinition].options.subtitleDelay = newValue
+        }
     }
     
     public var subtitleColor: UIColor {
