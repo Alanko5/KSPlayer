@@ -173,7 +173,6 @@ final class AudioGraphPlayer: AudioPlayer {
         }
     }
 
-
     init() {
         var newGraph: AUGraph!
         NewAUGraph(&newGraph)

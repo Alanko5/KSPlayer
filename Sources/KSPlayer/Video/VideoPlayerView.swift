@@ -85,7 +85,7 @@ open class VideoPlayerView: PlayerView {
     public var titleLabel = UILabel()
     public var subtitleLabel = UILabel()
     public var subtitleTextColor = UIColor.white
-    public var subtitleBackView = UIView()
+    public var subtitleBackView = UIImageView()
     /// Activty Indector for loading
     public var loadingIndector: UIView & LoadingIndector = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
     public var seekToView: UIView & SeekViewProtocol = SeekView()
@@ -452,7 +452,6 @@ extension VideoPlayerView {
         subtitleLabel.textColor = .white
         subtitleLabel.font = .systemFont(ofSize: 16)
         subtitleBackView.cornerRadius = 2
-        subtitleBackView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         subtitleBackView.addSubview(subtitleLabel)
         subtitleBackView.isHidden = true
         addSubview(subtitleBackView)
@@ -486,6 +485,21 @@ extension VideoPlayerView {
     private func hideLoader() {
         loadingIndector.isHidden = true
         loadingIndector.stopAnimating()
+    }
+
+    open func showSubtile(from subtitle: KSSubtitleProtocol, at time: TimeInterval) {
+        if let object = subtitle.search(for: time + (resource?.definitions[currentDefinition].options.subtitleDelay ?? 0.0)) {
+            subtitleBackView.isHidden = false
+            if let text = object as? NSAttributedString {
+                subtitleLabel.attributedText = text
+            } else {
+                // swiftlint:disable force_cast
+                subtitleBackView.image = UIImage(cgImage: object as! CGImage)
+                // swiftlint:enable force_cast
+            }
+        } else {
+            subtitleBackView.isHidden = true
+        }
     }
 
     private func addConstraint() {
