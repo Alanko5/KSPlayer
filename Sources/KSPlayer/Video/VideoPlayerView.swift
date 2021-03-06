@@ -389,10 +389,16 @@ open class VideoPlayerView: PlayerView {
     
     // MARK: For override - Overriding declarations in extensions is not supported
     open func showSubtile(from subtitle: KSSubtitleProtocol, at time: TimeInterval) {
-        if let text = subtitle.search(for: time) {
-            text.addAttribute(NSAttributedString.Key.foregroundColor, value: self.subtitleTextColor, range: NSMakeRange(0, text.length))
+        if let object = subtitle.search(for: time + (resource?.definitions[currentDefinition].options.subtitleDelay ?? 0.0)) {
             subtitleBackView.isHidden = false
-            subtitleLabel.attributedText = text
+            if let text = object as? NSMutableAttributedString {
+                text.addAttribute(NSAttributedString.Key.foregroundColor, value: self.subtitleTextColor, range: NSMakeRange(0, text.length))
+                subtitleLabel.attributedText = text
+            } else {
+                // swiftlint:disable force_cast
+                subtitleBackView.image = UIImage(cgImage: object as! CGImage)
+                // swiftlint:enable force_cast
+            }
         } else {
             subtitleBackView.isHidden = true
         }
@@ -485,21 +491,6 @@ extension VideoPlayerView {
     private func hideLoader() {
         loadingIndector.isHidden = true
         loadingIndector.stopAnimating()
-    }
-
-    open func showSubtile(from subtitle: KSSubtitleProtocol, at time: TimeInterval) {
-        if let object = subtitle.search(for: time + (resource?.definitions[currentDefinition].options.subtitleDelay ?? 0.0)) {
-            subtitleBackView.isHidden = false
-            if let text = object as? NSAttributedString {
-                subtitleLabel.attributedText = text
-            } else {
-                // swiftlint:disable force_cast
-                subtitleBackView.image = UIImage(cgImage: object as! CGImage)
-                // swiftlint:enable force_cast
-            }
-        } else {
-            subtitleBackView.isHidden = true
-        }
     }
 
     private func addConstraint() {
