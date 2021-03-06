@@ -86,7 +86,7 @@ final class AudioGraphPlayer: AudioPlayer {
             AudioUnitSetParameter(audioUnitForMixer, kMultiChannelMixerParam_Enable, kAudioUnitScope_Input, 0, AudioUnitParameterValue(value), 0)
         }
     }
-    
+
     public var isReduceLoudSounds: Bool {
         get {
             var value = AudioUnitParameterValue(0.001)
@@ -101,7 +101,7 @@ final class AudioGraphPlayer: AudioPlayer {
             }
         }
     }
-    
+
     private func disableReduceLoudSounds() {
         AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_AttackTime, kAudioUnitScope_Global, 0, 0.001, 0)
         AudioUnitSetParameter(audioUnitForMixer, kDynamicsProcessorParam_ReleaseTime, kAudioUnitScope_Global, 0, 0.05, 0)

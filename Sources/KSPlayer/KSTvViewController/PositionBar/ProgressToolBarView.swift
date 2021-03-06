@@ -130,15 +130,15 @@ final class ProgressToolBarView: UIViewController {
     }
 }
 
-//MARK: - seek gestures
+// MARK: - seek gestures
 @available(tvOS 13.0, *)
 extension ProgressToolBarView {
     private func configureSwipeGestures() {
         let gesture = UIPanGestureRecognizer(target: self, action: #selector(self.panGesture(_:)))
         self.view.addGestureRecognizer(gesture)
     }
-    
-    @objc func panGesture(_ gesture:UIPanGestureRecognizer){
+
+    @objc func panGesture(_ gesture: UIPanGestureRecognizer) {
         self.decelerateTimer?.invalidate()
         switch gesture.state {
         case .cancelled:
@@ -159,7 +159,7 @@ extension ProgressToolBarView {
             return
         }
     }
-    
+
     private func moveByDeceleratingPosition(by translation: CGFloat) {
         if abs(translation) > 1 {
             var frame: CGFloat = 0

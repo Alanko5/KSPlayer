@@ -25,7 +25,7 @@ public class EmbedSubtitleInfo: SubtitleInfo {
 }
 
 extension FFPlayerItemTrack: KSSubtitleProtocol {
-    func search(for time: TimeInterval) -> NSAttributedString? {
+    func search(for time: TimeInterval) -> NSMutableAttributedString? {
         let frame = getOutputRender { item -> Bool in
             if let subtitle = item as? SubtitleFrame {
                 return subtitle.part == time

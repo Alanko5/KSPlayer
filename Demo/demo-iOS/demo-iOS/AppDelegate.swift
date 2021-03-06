@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             splitViewController.preferredDisplayMode = .primaryOverlay
             splitViewController.delegate = self
             #if os(tvOS)
-            let detailVC = KStvOSViewController()
+            let detailVC = KSPlayerViewController()
             #else
             let detailVC = DetailViewController()
             detailVC.navigationItem.leftItemsSupplementBackButton = true

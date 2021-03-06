@@ -8,8 +8,8 @@
 import UIKit
 
 public enum KSPlayerMediaQuality {
-    case sd
-    case hd
+    case qSd
+    case qHd
     case fullHD
     case ultraHD
 }
@@ -22,23 +22,15 @@ public struct KSPlayerMediaInfo {
     let quality: KSPlayerMediaQuality?
 }
 
-public protocol KStvOSViewDelegate: class {
-    func existNextResource() -> Bool
-    func nextResourceForPlayer() -> KSPlayerResource
-    func nextMediaInfoForPlayer() -> KSPlayerMediaInfo
-}
-
 @available(tvOS 13.0, *)
-final public class KStvOSViewController: UIViewController {
-    public weak var delegate:KStvOSViewDelegate?
-    
-    private(set) var playerView:VideoPlayerView = VideoPlayerView()
-    private let progressBar:ProgressToolBarView = ProgressToolBarView()
+final public class KSPlayerViewController: UIViewController {
+    private(set) var playerView: TVPlayerView = TVPlayerView()
+    private let progressBar: ProgressToolBarView = ProgressToolBarView()
     private let progressContainer: UIView = UIView()
-    private var infoController:KStvOSInfoViewController = KStvOSInfoViewController()
+    private var infoController: KSPanelViewController = KSPanelViewController()
     private let infoControllerContainer: UIView = UIView()
-    
-    private var isPlaying:Bool {
+
+    private var isPlaying: Bool {
         get {
             return self.playerView.playerLayer.player?.isPlaying ?? false
         }
@@ -50,9 +42,6 @@ final public class KStvOSViewController: UIViewController {
         self.addGestures()
         self.view.backgroundColor = .black
         self.navigationController?.navigationBar.isHidden = true
-        
-        self.infoController.start(with: self.playerView.playerLayer.player)
-        self.present(newContrller: self.infoController, animation: true)
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -60,7 +49,7 @@ final public class KStvOSViewController: UIViewController {
         self.playerView.delegate = self
         
     }
-    
+
     public override var preferredUserInterfaceStyle: UIUserInterfaceStyle {
         return .dark
     }
@@ -68,12 +57,12 @@ final public class KStvOSViewController: UIViewController {
     deinit {
         print("Deinit")
     }
-    
-    //MARK: - Private methods
+
+    // MARK: - Private methods
     private func configureView() {
         self.view.addSubview(self.playerView)
         self.playerView.translatesAutoresizingMaskIntoConstraints = true
-        
+
         self.playerView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
         self.playerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         self.playerView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
@@ -84,8 +73,7 @@ final public class KStvOSViewController: UIViewController {
     }
     
     private func play() {
-        //TODO: need info from player is seekable
-        self.progressBar.isSeekable = true
+        self.progressBar.isSeekable = self.playerView.playerLayer.player?.seekable ?? false
         
         self.playerView.play()
         self.progressBar(show: false)
@@ -154,7 +142,7 @@ final public class KStvOSViewController: UIViewController {
 
 //MARK: - KS PlayerControllerDelegate
 @available(tvOS 13.0, *)
-extension KStvOSViewController: PlayerControllerDelegate {
+extension KSPlayerViewController: PlayerControllerDelegate {
     public func playerController(state: KSPlayerState) {
         switch state {
         case .notSetURL:
@@ -197,7 +185,7 @@ extension KStvOSViewController: PlayerControllerDelegate {
 
 //MARK: - button actions
 @available(tvOS 13.0, *)
-extension KStvOSViewController  {
+extension KSPlayerViewController  {
     private func addGestures() {
         let menuPressRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.menuPressed))
         menuPressRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.menu.rawValue)]
@@ -209,14 +197,38 @@ extension KStvOSViewController  {
         
         let selectPressRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.selectPressed))
         selectPressRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.select.rawValue)]
-        self.view.isUserInteractionEnabled = true
         self.view.addGestureRecognizer(selectPressRecognizer)
+        
+        let swipeUpRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipedUp(_:)) )
+        swipeUpRecognizer.direction = .up
+        self.playerView.addGestureRecognizer(swipeUpRecognizer)
+        
+        let swipeDownRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipedDown(_:)) )
+        swipeDownRecognizer.direction = .down
+        self.playerView.addGestureRecognizer(swipeDownRecognizer)
+        self.playerView.isUserInteractionEnabled = true
+        self.view.isUserInteractionEnabled = true
     }
     
     private func removeGestures() {
         for gesture in self.view.gestureRecognizers ?? [] {
             self.view.removeGestureRecognizer(gesture)
         }
+        for gesture in self.playerView.gestureRecognizers ?? [] {
+            self.playerView.removeGestureRecognizer(gesture)
+        }
+    }
+    
+    @objc func swipedUp(_ gesture: UIGestureRecognizer) {
+        self.dismiss(oldController: self.infoController, animation: true)
+    }
+    
+    @objc func swipedDown(_ gesture: UIGestureRecognizer) {
+        self.infoController.start(with: self.playerView)
+        self.infoController.view.backgroundColor = .clear
+        self.infoController.modalTransitionStyle = .crossDissolve
+        self.infoController.modalPresentationStyle = .overCurrentContext
+        self.present(self.infoController, animated: true, completion: nil)
     }
     
     @objc func menuPressed() {
@@ -246,9 +258,9 @@ extension KStvOSViewController  {
 
 //MARK: - controller public methods
 @available(tvOS 13.0, *)
-extension KStvOSViewController {
-    
-    public func set(_ media:KSPlayerResource, preferedAudioLangCode:String? = nil) {
+extension KSPlayerViewController {
+
+    public func set(_ media: KSPlayerResource, preferedAudioLangCode: String? = nil) {
         self.playerView.set(resource: media)
     }
     
@@ -262,10 +274,9 @@ extension KStvOSViewController {
     
 }
 
-//MARK: - add remove vontroller
+// MARK: - add remove vontroller
 @available(tvOS 13.0, *)
-extension KStvOSViewController {
-    
+extension KSPlayerViewController {
     private func present(newContrller:UIViewController, animation:Bool) {
         newContrller.willMove(toParent: self)
         self.view.addSubview(newContrller.view)
@@ -273,7 +284,7 @@ extension KStvOSViewController {
         newContrller.didMove(toParent: self)
         self.removeGestures()
     }
-    
+
     private func dismiss(oldController:UIViewController, animation:Bool) {
         oldController.willMove(toParent: nil)
         oldController.view.removeFromSuperview()
@@ -282,4 +293,3 @@ extension KStvOSViewController {
         self.addGestures()
     }
 }
-

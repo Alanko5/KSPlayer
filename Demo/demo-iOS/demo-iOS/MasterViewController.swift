@@ -135,13 +135,14 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        #if os(tvOS)
         if #available(tvOS 13.0, *), UIDevice.current.userInterfaceIdiom == .tv {
-            let controller = KStvOSViewController()
+            let controller = KSPlayerViewController()
             controller.set(objects[indexPath.row])
             navigationController?.pushViewController(controller, animated: true)
             return
         }
-        
+        #endif
         tableView.deselectRow(at: indexPath, animated: true)
         if let split = splitViewController, let nav = split.viewControllers.last as? UINavigationController, let detail = nav.topViewController as? DetailProtocol {
             detail.resource = objects[indexPath.row]

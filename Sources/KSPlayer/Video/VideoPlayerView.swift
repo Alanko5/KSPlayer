@@ -84,6 +84,7 @@ open class VideoPlayerView: PlayerView {
     public var navigationBar = UIStackView()
     public var titleLabel = UILabel()
     public var subtitleLabel = UILabel()
+    public var subtitleTextColor = UIColor.white
     public var subtitleBackView = UIView()
     /// Activty Indector for loading
     public var loadingIndector: UIView & LoadingIndector = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
@@ -385,6 +386,17 @@ open class VideoPlayerView: PlayerView {
         }
     }
     #endif
+    
+    // MARK: For override - Overriding declarations in extensions is not supported
+    open func showSubtile(from subtitle: KSSubtitleProtocol, at time: TimeInterval) {
+        if let text = subtitle.search(for: time) {
+            text.addAttribute(NSAttributedString.Key.foregroundColor, value: self.subtitleTextColor, range: NSMakeRange(0, text.length))
+            subtitleBackView.isHidden = false
+            subtitleLabel.attributedText = text
+        } else {
+            subtitleBackView.isHidden = true
+        }
+    }
 }
 
 // MARK: - seekToView
@@ -474,15 +486,6 @@ extension VideoPlayerView {
     private func hideLoader() {
         loadingIndector.isHidden = true
         loadingIndector.stopAnimating()
-    }
-
-    open func showSubtile(from subtitle: KSSubtitleProtocol, at time: TimeInterval) {
-        if let text = subtitle.search(for: time) {
-            subtitleBackView.isHidden = false
-            subtitleLabel.attributedText = text
-        } else {
-            subtitleBackView.isHidden = true
-        }
     }
 
     private func addConstraint() {
